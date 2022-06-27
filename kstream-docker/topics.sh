@@ -5,6 +5,10 @@ docker exec -it broker kafka-topics --bootstrap-server localhost:9092 --create \
   --partitions 6
 
 docker exec -it broker kafka-topics --bootstrap-server localhost:9092 --create \
+  --topic labs.atm.Account-event \
+  --partitions 6
+
+docker exec -it broker kafka-topics --bootstrap-server localhost:9092 --create \
   --topic labs.Account-state \
   --partitions 6 \
   --config cleanup.policy=compact

@@ -3,8 +3,8 @@ package ch.post.labs.kstreams.topologies
 import ch.post.labs.kstreams.model.Account
 import ch.post.labs.kstreams.model.AccountEvent
 import ch.post.labs.kstreams.model.AccountTransaction
-import ch.post.labs.kstreams.topologies.AccountTopology.Companion.ACCOUNT_EVENT_TOPIC
-import ch.post.labs.kstreams.topologies.AccountTopology.Companion.ACCOUNT_STORE
+import ch.post.labs.kstreams.topologies.AccountTableTopology.Companion.ACCOUNT_EVENT_TOPIC
+import ch.post.labs.kstreams.topologies.AccountTableTopology.Companion.ACCOUNT_STORE
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
@@ -13,7 +13,8 @@ import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.state.KeyValueStore
 import org.apache.kafka.streams.test.TestRecord
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
@@ -22,9 +23,9 @@ import org.springframework.kafka.support.serializer.JsonSerializer
 import java.util.*
 import java.util.function.Consumer
 
-class AccountTopologyTests {
+class AccountTableTopologyTests {
 
-    private val logger: Logger = LoggerFactory.getLogger(AccountTopologyTests::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(AccountTableTopologyTests::class.java)
 
     private val config: Properties = mapOf(
         StreamsConfig.APPLICATION_ID_CONFIG to "kstreams-labs",
@@ -41,8 +42,8 @@ class AccountTopologyTests {
     @BeforeEach
     fun beforeEach() {
         val builder = StreamsBuilder()
-        AccountTopology().accountTable(builder)
-        val topology = builder.build();
+        AccountTableTopology().accountTable(builder)
+        val topology = builder.build()
         testDriver = TopologyTestDriver(topology, config)
         logger.debug("\n{}", topology.describe())
         accountEvents = testDriver.createInputTopic(
@@ -56,28 +57,29 @@ class AccountTopologyTests {
     @Test
     fun test_deposit_to_new_account() {
         val event =
-            AccountEvent(UUID.randomUUID().toString(), System.currentTimeMillis(), null, AccountTransaction(100, 1))
+            AccountEvent(UUID.randomUUID().toString(), System.currentTimeMillis(), null, AccountTransaction(100, "foo"))
         accountEvents.pipeInput(TestRecord(event.id, event))
-        Assertions.assertNotNull(accounts[event.id])
-        Assertions.assertEquals(event.id, accounts[event.id].id)
-        Assertions.assertEquals(event.deposit!!.amount, accounts[event.id].saldo)
+        assertNotNull(accounts[event.id])
+        assertEquals(event.id, accounts[event.id].id)
+        assertEquals(event.deposit!!.amount, accounts[event.id].saldo)
     }
 
     @Test
     fun test_transactions_to_existing_account() {
         val id = UUID.randomUUID().toString()
         listOf(
-            AccountEvent(id, System.currentTimeMillis(), null, AccountTransaction(100, 1)),
-            AccountEvent(id, System.currentTimeMillis(), null, AccountTransaction(50, 1)),
-            AccountEvent(id, System.currentTimeMillis(), AccountTransaction(20, 1), null)
+            AccountEvent(id, System.currentTimeMillis(), null, AccountTransaction(100, "foo")),
+            AccountEvent(id, System.currentTimeMillis(), null, AccountTransaction(50, "foo")),
+            AccountEvent(id, System.currentTimeMillis(), AccountTransaction(20, "foo"), null)
         ).forEach(Consumer { event -> accountEvents.pipeInput(TestRecord(event.id, event)) })
 
-        Assertions.assertNotNull(accounts[id])
-        Assertions.assertEquals(130, accounts[id].saldo)
+        assertNotNull(accounts[id])
+        assertEquals(130, accounts[id].saldo)
     }
 
     @AfterEach
     fun after() {
         testDriver.close()
     }
+
 }

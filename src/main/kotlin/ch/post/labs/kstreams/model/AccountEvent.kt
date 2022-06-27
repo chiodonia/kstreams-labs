@@ -7,4 +7,4 @@ data class AccountEvent(
     val deposit: AccountTransaction?,
 )
 
-data class AccountTransaction(val amount: Long, val atm: Int)
+data class AccountTransaction(val amount: Long, val atm: String)

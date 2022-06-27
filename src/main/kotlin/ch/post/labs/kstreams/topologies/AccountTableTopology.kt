@@ -15,9 +15,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.support.serializer.JsonSerde
 
-
 @Configuration
-class AccountTopology {
+class AccountTableTopology {
 
     companion object {
         const val ACCOUNT_STORE = "accounts"
