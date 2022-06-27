@@ -1,0 +1,49 @@
+server:
+  port: 8080
+  http2:
+    enabled: true
+
+logging:
+  level:
+    root: ERROR
+    ch.post: DEBUG
+    org.apache.kafka: ERROR
+
+management:
+  endpoint.health:
+    show-details: always
+    show-components: always
+    probes.enabled: true
+  security.enabled: false
+  endpoints.web.exposure.include: '*'
+  metrics:
+    enable:
+      jvm: true
+
+spring:
+  rsocket:
+    server:
+      address: localhost
+      port: 7070
+  application:
+    name: kstreams-labs
+  kafka:
+    bootstrap-servers: localhost:9092
+    streams:
+      application-id: kstreams-labs
+      state-dir: /tmp/kstreams/state
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      max-poll-records: 100
+      isolation-level: read_committed
+      properties:
+        application:
+          server: localhost:7070
+        processing:
+          guarantee: exactly_once_v2
+  graphql:
+    schema:
+      printer:
+        enabled: true
+    graphiql:
+      enabled: true
