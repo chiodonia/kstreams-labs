@@ -29,7 +29,7 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TOPIC_CREATION_ENABLE: 'true'
+      KAFKA_TOPIC_CREATION_ENABLE: 'false'
 
   connect:
     image: confluentinc/cp-kafka-connect:latest
@@ -74,6 +74,8 @@ services:
       - broker
     ports:
       - "8088:8088"
+#    volumes:
+#      - ./ksqldb-server:/etc/ksqldb-server
     environment:
       KSQL_LISTENERS: http://0.0.0.0:8088
       KSQL_BOOTSTRAP_SERVERS: broker:29092
@@ -81,6 +83,7 @@ services:
       KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
       KSQL_KSQL_SERVICE_ID: dev
       KSQL_KSQL_CONNECT_URL: http://connect:8083
+#      KSQL_KSQL_QUERIES_FILE: /etc/ksqldb-server/queries.sql
 
   ksqldb-cli:
     image: confluentinc/ksqldb-cli:latest
@@ -88,5 +91,7 @@ services:
     depends_on:
       - broker
       - ksqldb-server
+    volumes:
+      - ./ksqldb:/etc/ksqldb
     entrypoint: /bin/sh
     tty: true
