@@ -83,7 +83,7 @@ services:
       KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
       KSQL_KSQL_SERVICE_ID: dev
       KSQL_KSQL_CONNECT_URL: http://connect:8083
-#      KSQL_KSQL_QUERIES_FILE: /etc/ksqldb-server/queries.sql
+#      KSQL_KSQL_QUERIES_FILE: /etc/ksqldb-server/streams.sql
 
   ksqldb-cli:
     image: confluentinc/ksqldb-cli:latest
@@ -92,6 +92,6 @@ services:
       - broker
       - ksqldb-server
     volumes:
-      - ./ksqldb:/etc/ksqldb
+      - ./labs:/labs
     entrypoint: /bin/sh
     tty: true
