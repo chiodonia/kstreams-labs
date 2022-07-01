@@ -1,0 +1,18 @@
+{
+  "outputs": [
+    {
+      "topic": "bank.Account-state",
+      "key": "2",
+      "value": {
+        "saldo": -50
+      }
+    },
+    {
+      "topic": "bank.Account-state",
+      "key": "1",
+      "value": {
+        "saldo": 100
+      }
+    }
+  ]
+}

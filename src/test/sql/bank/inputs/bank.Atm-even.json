@@ -1,0 +1,24 @@
+{
+  "inputs": [
+    {
+      "topic": "bank.Atm-event",
+      "timestamp": 1,
+      "key": "1",
+      "value": {
+        "account": "1",
+        "timestamp": 1,
+        "deposit": {"amount": 100, "atm": "2"}
+      }
+    },
+    {
+      "topic": "bank.Atm-event",
+      "timestamp": 10,
+      "key": "2",
+      "value": {
+        "account": "2",
+        "timestamp": 10,
+        "withdrawn": {"amount": -50, "atm": "3"}
+      }
+    }
+  ]
+}

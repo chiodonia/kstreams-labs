@@ -1,0 +1,26 @@
+{
+  "inputs": [
+    {
+      "topic": "bank.AccountTransaction",
+      "key": "2",
+      "value": {
+        "account": "2",
+        "amount": -50,
+        "timestamp": 10,
+        "atm": "ATM-3",
+        "transaction": "withdrawn"
+      }
+    },
+    {
+      "topic": "bank.AccountTransaction",
+      "key": "1",
+      "value": {
+        "account": "1",
+        "amount": 100,
+        "timestamp": 1,
+        "atm": "ATM-2",
+        "transaction": "deposit"
+      }
+    }
+  ]
+}
